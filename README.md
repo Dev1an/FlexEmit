@@ -44,7 +44,7 @@ eventEmitter.emit(firstPlace) // prints "Moved to coordinates 0:1"
 eventEmitter.emit(secondPlace)// prints "Moved to coordinates 2:3"
 ```
 
-Thats all you need to emit and receive type safe events in Swift!
+🎉 Thats all you need to emit and receive type safe events in Swift!
 
 ## More info
 
