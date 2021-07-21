@@ -36,11 +36,3 @@ struct MessageA: Equatable {
 struct MessageB: Equatable {
 	let z: UInt8
 }
-
-func a() {
-
-}
-
-func b() {
-
-}
