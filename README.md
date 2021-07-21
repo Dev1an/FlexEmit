@@ -53,6 +53,7 @@ eventEmitter.emit(secondPlace)// prints "Moved to coordinates 2:3"
 You can send and receive as many messages of any Swift Type as you want. For example let's create another event type
 
 ```swift
+eventEmitter.emit(EnergyLevelChanged(to: 70))
 struct EnergyLevelChanged {
     let newEnergyLevel: Int
     init(to newValue: Int) { newEnergyLevel = newValue }
