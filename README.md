@@ -10,12 +10,12 @@ It is inspired by NodeJS' famous EventEmitter but it uses the Swift Type system 
 
 ## Basic usage
 
-### 1. Create an emitter
+### Create an emitter 📡
 ```swift
 let eventEmitter = Emitter()
 ```
 
-### 2. Create an event type
+### Create an event type 🧾
 
 ```swift
 struct MovedTo {
@@ -23,7 +23,7 @@ struct MovedTo {
 }
 ```
 
-### 3. Register an event listener
+### Register an event listener 🛰
 
 To act upon new emitted messages of a certain type (in our case `MovedTo`), just write
 
@@ -35,7 +35,7 @@ eventEmitter.when { (newLocation: MovedTo) in
 
 Note that the `newLocation` argument is type safe and will always be a struct of type `MovedTo`
 
-### 4. Emit events
+### Emit events ✈️
 
 ```swift
 let firstPlace = MovedTo(x: 0, y: 1)
@@ -44,7 +44,7 @@ eventEmitter.emit(firstPlace) // prints "Moved to coordinates 0:1"
 eventEmitter.emit(secondPlace)// prints "Moved to coordinates 2:3"
 ```
 
-🎉 Thats all you need to emit and receive type safe events in Swift!
+🥳 Thats all you need to emit and receive type safe events in Swift!
 
 ## More info
 
