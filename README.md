@@ -77,3 +77,40 @@ It's as simple as that. Whenever you sent a new message the appropriate event li
 eventEmitter.emit(EnergyLevelChanged(to: 60)) // prints "Changed energy level to 60"
 eventEmitter.emit(MovedTo(x: 0, y: 0)) // prints "Moved to coordinates 0:0"
 ```
+
+### Listen once
+
+When you only want to execute your listener once and remove it after the listener is called, use the `listenOnce` method:
+
+```swift
+eventEmitter.listenOnce { (event: EnergyLevelChanged) in
+    print("Only saying this once like this. EnergyLevelChanged event has been emitted")
+}
+```
+
+### Removing listeners
+
+#### Remove a specific listener
+
+It is possible to save a listener so you can remove or cancel it later. To do this just assign the result of `when(...)` to a variable that you can reference later:
+
+```swift
+let energyListener = emitter.when { (event: EnergyLevelChanged) in
+    print("Processed an EnergyLevelChanged event")
+}
+```
+
+Then remove this listener using `remove(listener:)`
+
+```swift
+emitter.remove(listener: energyListener)
+```
+
+#### Removing all listeners for a specific event type
+
+When you want to cancel all listeners for a specific event type, use the `removeAllListeners(for:)` method:
+
+```swift
+emitter.removeAllListeners(for: EnergyLevelChanged.self)
+```
+

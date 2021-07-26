@@ -107,7 +107,7 @@ final class Flex_EmitTests: XCTestCase {
 		receivedB1 = false
 		receivedB2 = false
 
-		XCTAssert( emitter.removeAllListenersFor(message: MessageB.self) )
+		XCTAssert( emitter.removeAllListeners(for: MessageB.self) )
 		emitter.emit(eventB)
 		XCTAssert(!receivedB1)
 		XCTAssert(!receivedB2)
@@ -146,7 +146,7 @@ final class Flex_EmitTests: XCTestCase {
 		XCTAssertEqual(lastHeard3, 1)
 		XCTAssertEqual(lastHeard4, 2)
 
-		emitter.removeAllListenersFor(message: MessageB.self)
+		emitter.removeAllListeners(for: MessageB.self)
 		emitter.emit(MessageB(z: 3))
 
 		XCTAssertEqual(lastHeard1, 2)

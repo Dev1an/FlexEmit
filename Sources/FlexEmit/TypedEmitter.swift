@@ -23,14 +23,14 @@ final public class Emitter {
 		return handler
 	}
 
+	@discardableResult
+	public func removeAllListeners<Message>(for message: Message.Type) -> Bool {
+		registry.removeValue(forKey: ObjectIdentifier(message)) != nil
+	}
+
 	public func remove<Message>(listener: Listener<Message>) {
 		let id = ObjectIdentifier(Message.self)
 		registry[id]?.removeAll { listener === $0 }
-	}
-
-	@discardableResult
-	public func removeAllListenersFor<Message>(message: Message.Type) -> Bool {
-		registry.removeValue(forKey: ObjectIdentifier(message)) != nil
 	}
 }
 
