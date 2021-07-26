@@ -1,20 +1,20 @@
 final public class Emitter {
-	fileprivate var registry = [ObjectIdentifier: ContiguousArray<UnsafeHandler>]()
+	fileprivate var registry = [ObjectIdentifier: ContiguousArray<UnsafeListener>]()
 
 	public init() {}
 
 	public func emit<Message>(_ message: Message) {
 		if let listeners = registry[ObjectIdentifier(Message.self)] {
 			for listener in listeners {
-				unsafeDowncast(listener, to: Handler<Message>.self).content(message)
+				unsafeDowncast(listener, to: Listener<Message>.self).content(message)
 			}
 		}
 	}
 
 	@discardableResult
-	public func when<Message>(_ listener: @escaping (Message)->Void) -> Handler<Message> {
+	public func when<Message>(_ listener: @escaping (Message)->Void) -> Listener<Message> {
 		let id = ObjectIdentifier(Message.self)
-		let handler = Handler(content: listener)
+		let handler = Listener(content: listener)
 		if registry.keys.contains(id) {
 			registry[id]!.append(handler)
 		} else {
@@ -23,7 +23,7 @@ final public class Emitter {
 		return handler
 	}
 
-	public func remove<Message>(listener: Handler<Message>) {
+	public func remove<Message>(listener: Listener<Message>) {
 		let id = ObjectIdentifier(Message.self)
 		registry[id]?.removeAll { listener === $0 }
 	}
@@ -34,9 +34,9 @@ final public class Emitter {
 	}
 }
 
-public class UnsafeHandler {}
+public class UnsafeListener {}
 
-public class Handler<Message>: UnsafeHandler {
+public class Listener<Message>: UnsafeListener {
 	public let content: (Message)->Void
 
 	init(content: @escaping (Message)->Void) {self.content = content}

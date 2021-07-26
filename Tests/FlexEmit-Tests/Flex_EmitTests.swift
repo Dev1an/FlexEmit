@@ -76,7 +76,7 @@ final class Flex_EmitTests: XCTestCase {
 		XCTAssert(!receivedB1)
 		XCTAssert(!receivedB2)
 
-		let listenerB1: Handler<MessageB> = emitter.when { _ in receivedB1 = true }
+		let listenerB1: Listener<MessageB> = emitter.when { _ in receivedB1 = true }
 		emitter.when { (message: MessageB) in receivedB2 = true }
 
 		XCTAssert(!receivedB1)
