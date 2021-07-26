@@ -12,7 +12,8 @@ fileprivate enum SelfRemover {
 }
 
 extension Emitter {
-	public func listenOnce<Message>(_ listener: @escaping (Message)->Void) {
+	@discardableResult
+	public func listenOnce<Message>(_ listener: @escaping (Message)->Void) -> Listener<Message> {
 		var selfRemover = SelfRemover.notInitialised
 		let modifiedListener = when { (message: Message) in
 			if case .initialised(remover: let removeListener) = selfRemover { removeListener() }
@@ -23,5 +24,6 @@ extension Emitter {
 			case .calledBeforeInitialised: remove(listener: modifiedListener)
 			default: selfRemover = .initialised(remover: {self.remove(listener: modifiedListener)})
 		}
+		return modifiedListener
 	}
 }
