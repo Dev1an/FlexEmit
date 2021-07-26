@@ -1,12 +1,12 @@
-public class Emitter {
-	fileprivate var registry = [ObjectIdentifier: [UnsafeHandler]]()
+final public class Emitter {
+	fileprivate var registry = [ObjectIdentifier: ContiguousArray<UnsafeHandler>]()
 
 	public init() {}
 
 	public func emit<Message>(_ message: Message) {
 		if let listeners = registry[ObjectIdentifier(Message.self)] {
 			for listener in listeners {
-				listener.send(unsafeMessage: message)
+				unsafeDowncast(listener, to: Handler<Message>.self).content(message)
 			}
 		}
 	}
@@ -22,18 +22,22 @@ public class Emitter {
 		}
 		return handler
 	}
+
+	public func remove<Message>(listener: Handler<Message>) {
+		let id = ObjectIdentifier(Message.self)
+		registry[id]?.removeAll { listener === $0 }
+	}
+
+	@discardableResult
+	public func removeAllListenersFor<Message>(message: Message.Type) -> Bool {
+		registry.removeValue(forKey: ObjectIdentifier(message)) != nil
+	}
 }
 
-fileprivate protocol UnsafeHandler {
-	func send<Message>(unsafeMessage: Message)
-}
+public class UnsafeHandler {}
 
 public class Handler<Message>: UnsafeHandler {
 	public let content: (Message)->Void
 
 	init(content: @escaping (Message)->Void) {self.content = content}
-
-	fileprivate func send<UnsafeMessage>(unsafeMessage: UnsafeMessage) {
-		content(unsafeBitCast(unsafeMessage, to: Message.self))
-	}
 }
