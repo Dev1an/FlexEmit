@@ -112,6 +112,48 @@ final class Flex_EmitTests: XCTestCase {
 		XCTAssert(!receivedB1)
 		XCTAssert(!receivedB2)
 	}
+
+	func testListenOnce() {
+		var lastHeard1 = -1
+		var lastHeard2 = -1
+		var lastHeard3 = -1
+		var lastHeard4 = -1
+
+		let emitter = Emitter()
+		emitter.when { (message: MessageB) in lastHeard1 = message.z }
+
+		emitter.emit(MessageB(z: 0))
+		XCTAssertEqual(lastHeard1, 0)
+		XCTAssertEqual(lastHeard2, -1)
+		XCTAssertEqual(lastHeard3, -1)
+		XCTAssertEqual(lastHeard4, -1)
+
+		emitter.when { (message: MessageB) in lastHeard2 = message.z }
+		emitter.listenOnce { (message: MessageB) in lastHeard3 = message.z }
+		emitter.when { (message: MessageB) in lastHeard4 = message.z }
+
+		emitter.emit(MessageB(z: 1))
+
+		XCTAssertEqual(lastHeard1, 1)
+		XCTAssertEqual(lastHeard2, 1)
+		XCTAssertEqual(lastHeard3, 1)
+		XCTAssertEqual(lastHeard4, 1)
+
+		emitter.emit(MessageB(z: 2))
+
+		XCTAssertEqual(lastHeard1, 2)
+		XCTAssertEqual(lastHeard2, 2)
+		XCTAssertEqual(lastHeard3, 1)
+		XCTAssertEqual(lastHeard4, 2)
+
+		emitter.removeAllListenersFor(message: MessageB.self)
+		emitter.emit(MessageB(z: 3))
+
+		XCTAssertEqual(lastHeard1, 2)
+		XCTAssertEqual(lastHeard2, 2)
+		XCTAssertEqual(lastHeard3, 1)
+		XCTAssertEqual(lastHeard4, 2)
+	}
 }
 
 class Worker {
